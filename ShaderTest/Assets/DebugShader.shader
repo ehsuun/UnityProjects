@@ -1,37 +1,34 @@
-﻿Shader "_Shaders/ColorDebug"
-{
-Properties{
-	_Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-}
-SubShader{
-	Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" }
-	Blend SrcAlpha OneMinusSrcAlpha
-	Cull Off
-	LOD 200
+﻿Shader "Cg basic shader" { // defines the name of the shader 
+	SubShader{ // Unity chooses the subshader that fits the GPU best
+		Pass{ // some shaders require multiple passes
+		CGPROGRAM // here begins the part in Unity's Cg
 
-	CGPROGRAM
-#pragma surface surf Lambert
+#pragma vertex vert 
+				  // this specifies the vert function as the vertex shader 
+#pragma fragment frag
+				  // this specifies the frag function as the fragment shader
 
-	fixed4 _Color;
+		float4 vert(float4 vertexPos : POSITION) : SV_POSITION
+		// vertex shader 
+	{
+		return mul(UNITY_MATRIX_MVP,
+		float4(_SinTime[3], 0.1, 1.0, 1.0) * vertexPos);
+		
+	//return mul(UNITY_MATRIX_MVP, vertexPos);
+	// this line transforms the vertex input parameter 
+	// vertexPos with the built-in matrix UNITY_MATRIX_MVP
+	// and returns it as a nameless vertex output parameter 
+	}
 
-// Note: pointless texture coordinate. I couldn't get Unity (or Cg)
-//       to accept an empty Input structure or omit the inputs.
-struct Input {
-	float4 vertex : POSITION;
-	//float4 tangent : TANGENT;
-	//float3 normal : NORMAL;
-	//float4 texcoord : TEXCOORD0;
-	//float4 texcoord1 : TEXCOORD1;
-	fixed4 color : COLOR;
-};
+		float4 frag(void) : COLOR // fragment shader
+	{
+		return float4(0.6, 1.0, 0.0, 1.0);
+	// this fragment shader returns a nameless fragment
+	// output parameter (with semantic COLOR) that is set to
+	// opaque red (red = 1, green = 0, blue = 0, alpha = 1)
+	}
 
-void surf(Input IN, inout SurfaceOutput o) {
-	o.Albedo = _Color.rgb;
-	o.Emission = _Color.rgb; // * _Color.a;
-	o.Alpha = _Color.a;
-}
-
-ENDCG
-}
-FallBack "Diffuse"
+		ENDCG // here ends the part in Cg 
+	}
+	}
 }
