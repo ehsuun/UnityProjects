@@ -190,9 +190,10 @@ namespace UnityEditor
                 // Third properties
                 GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
                 if (highlights != null)
-                    m_MaterialEditor.ShaderProperty(highlights, Styles.highlightsText);
+                    m_MaterialEditor.ShaderProperty(highlights, Styles.highlightsText.text);
+
                 if (reflections != null)
-                    m_MaterialEditor.ShaderProperty(reflections, Styles.reflectionsText);
+                    m_MaterialEditor.ShaderProperty(reflections, Styles.reflectionsText.text);
 
                 EditorGUILayout.Space();
 
@@ -320,11 +321,11 @@ namespace UnityEditor
             }
 
             int indentation = 2; // align with labels of texture properties
-            m_MaterialEditor.ShaderProperty(showSmoothnessScale ? smoothnessScale : smoothness, showSmoothnessScale ? Styles.smoothnessScaleText : Styles.smoothnessText, indentation);
+            m_MaterialEditor.ShaderProperty(showSmoothnessScale ? smoothnessScale : smoothness, showSmoothnessScale ? Styles.smoothnessScaleText.text : Styles.smoothnessText.text, indentation);
 
             ++indentation;
             if (smoothnessMapChannel != null)
-                m_MaterialEditor.ShaderProperty(smoothnessMapChannel, Styles.smoothnessMapChannelText, indentation);
+                m_MaterialEditor.ShaderProperty(smoothnessMapChannel, Styles.smoothnessMapChannelText.text, indentation);
         }
 
         public static void SetupMaterialWithBlendMode(Material material, BlendMode blendMode)
