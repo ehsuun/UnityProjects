@@ -106,7 +106,8 @@ VertexOutputForwardBase_VC vertForwardBase_VC (VertexInput_VC v)
 		o.posWorld = posWorld.xyz;
 	#endif
 
-		stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0, 1, 0)))*_EYE_SEPARATION;
+		stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
+		//stereoDisplacement = normalize(cross(mul(unity_ObjectToWorld,UNITY_MATRIX_IT_MV[2]), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
 		o.pos = UnityWorldToClipPos(posWorld + stereoDisplacement);
 
 
@@ -213,7 +214,8 @@ VertexOutputForwardAdd_VC vertForwardAdd_VC (VertexInput_VC v)
 
 	float4 posWorld = mul(unity_ObjectToWorld, v.vertex);
 
-	stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0, 1, 0)))*_EYE_SEPARATION;
+	stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
+	//stereoDisplacement = normalize(cross(mul(unity_ObjectToWorld,UNITY_MATRIX_IT_MV[2]), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
 	o.pos = UnityWorldToClipPos(posWorld + stereoDisplacement);
 
 	//o.pos = UnityObjectToClipPos(v.vertex);
@@ -311,7 +313,8 @@ VertexOutputDeferred_VC vertDeferred_VC (VertexInput_VC v)
 		o.posWorld = posWorld;
 	#endif
 
-		stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0, 1, 0)))*_EYE_SEPARATION;
+		stereoDisplacement = normalize(cross((posWorld.xyz - _WorldSpaceCameraPos.xyz), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
+		//stereoDisplacement = normalize(cross(mul(unity_ObjectToWorld,UNITY_MATRIX_IT_MV[2]), float3(0.000001, 1, 0)))*_EYE_SEPARATION;
 		o.pos = UnityWorldToClipPos(posWorld + stereoDisplacement);
 
 	//o.pos = UnityObjectToClipPos(v.vertex);
