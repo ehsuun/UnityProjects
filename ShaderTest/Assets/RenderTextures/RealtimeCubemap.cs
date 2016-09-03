@@ -1,18 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum FacesBitmask { PositiveX = 0, NegativeX = 1, PositiveY = 2, NegativeY = 4, PositiveZ = 8, NegativeZ = 16}
+
 public class RealtimeCubemap : MonoBehaviour
 {
-
     public int cubemapSize = 128;
     public bool oneFacePerFrame = false;
     private Camera cam;
-    private RenderTexture rtex;
+    public RenderTexture rtex;
     private Texture2D temptex;
     private Cubemap cmap;
     private GameObject go;
     private Material m;
     public Shader shader;
+    public int customMask = -1;
+
+    public bool allFaces;
+    public bool[] customFaces;
 
     public Shader stereoShader;
     public float separation;
@@ -22,8 +27,8 @@ public class RealtimeCubemap : MonoBehaviour
     {
         // render all six faces at startup
         m = new Material(shader);
-        GetComponent<EQFullScreen>().mat = m;
-        UpdateCubemap(63);
+        //GetComponent<EQFullScreen>().mat = m;
+        //UpdateCubemap(63);
         temptex = new Texture2D(cubemapSize, cubemapSize);
     }
 
@@ -36,12 +41,31 @@ public class RealtimeCubemap : MonoBehaviour
             UpdateCubemap(faceMask);
         }
         else {
-            UpdateCubemap(63); // all six faces
+            if (allFaces)
+            {
+                UpdateCubemap(63); // all six faces
+            }
+            else if(customMask>0) // we have a custom mask set
+            {
+                UpdateCubemap(customMask);
+            }
+            else
+            {
+                int faceMask = 1;
+                for (int i =0; i < customFaces.Length; i++)
+                {
+                    if (customFaces[i]) faceMask = faceMask | (1 << i);
+                    
+                }
+                UpdateCubemap(faceMask);
+
+            }
         }
     }
 
     void UpdateCubemap(int faceMask)
     {
+        //Debug.Log("Facemask = " + faceMask);
         Shader.SetGlobalFloat("_EYE_SEPARATION", separation);
         if (!cam)
         {
@@ -66,10 +90,14 @@ public class RealtimeCubemap : MonoBehaviour
         if (!rtex)
         {
             rtex = new RenderTexture(cubemapSize, cubemapSize, 16);
+            rtex.antiAliasing = 2;
+            rtex.depth = 0;
+            //rtex.anisoLevel = 16;
+            rtex.useMipMap = true;
             rtex.isCubemap = true;
             rtex.hideFlags = HideFlags.HideAndDontSave;
             //GetComponent<Renderer>().sharedMaterial.SetTexture("_Cube", rtex);
-            GetComponent<EQFullScreen>().mat.SetTexture("_Cube", rtex);
+            //GetComponent<EQFullScreen>().mat.SetTexture("_Cube", rtex);
         }
 
         cam.transform.position = transform.position;
@@ -105,7 +133,7 @@ public class RealtimeCubemap : MonoBehaviour
             rtex.hideFlags = HideFlags.HideAndDontSave;
             cmap = new Cubemap(cubemapSize, TextureFormat.RGBA32, false);
             cmap.hideFlags = HideFlags.HideAndDontSave;
-            GetComponent<EQFullScreen>().mat.SetTexture("_Cube", cmap);
+            //GetComponent<EQFullScreen>().mat.SetTexture("_Cube", cmap);
         }
 
         cam.transform.position = transform.position;

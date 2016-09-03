@@ -1,5 +1,5 @@
 ﻿
-Shader "Custom/cubemapToEquirectangular" {
+Shader "Allo/cubemapToEquirectangular" {
 	Properties{
 		_Cube("Cubemap (RGB)", CUBE) = "" {}
 		_MainTex("Output", 2D) = "White" {}
