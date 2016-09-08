@@ -16,7 +16,7 @@ public class BinaryReadUnity : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void SetCalibrationTex () {
         tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
 
         Stream s = new MemoryStream(asset.bytes);
@@ -28,7 +28,14 @@ public class BinaryReadUnity : MonoBehaviour {
             float b = br.ReadSingle();
             float a = br.ReadSingle();
 
+            
+
             Color pix = new Color(r, g, b, a);
+
+            if (i % 1278 == 0)
+            {
+                Debug.Log(pix);
+            }
 
             int x = i % width;
             int y = Mathf.FloorToInt((float)i / (float)width);
