@@ -10,6 +10,9 @@ public class Movement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Rigidbody>().velocity = new Vector3(-Input.GetAxis("Vertical"), 0,  Input.GetAxis("Horizontal"));
-	}
+        transform.localEulerAngles += new Vector3(0,Input.GetAxis("Mouse X")*2f,0);
+        GetComponent<Rigidbody>().velocity = Input.GetAxis("Vertical") * transform.forward + Input.GetAxis("Horizontal") * transform.right;
+
+
+    }
 }

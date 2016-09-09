@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_MainTex("Output", 2D) = "white" {}
+	_MainTex("Output", 2D) = "white" {}
 	_WarpTex("Warp Texture", 2D) = "white" {}
 	_Cube("Environment Map", Cube) = "" {}
 	}
@@ -20,6 +20,10 @@
 	sampler2D _MainTex;
 	sampler2D _WarpTex;
 	samplerCUBE _Cube;
+
+	uniform float _Look_FloatX;
+	uniform float _Look_FloatY;
+	uniform float _Look_FloatZ;
 
 	struct appdata
 	{
@@ -44,13 +48,22 @@
 
 	fixed4 frag(v2f i) : COLOR
 	{
+		//Rotation Matrix used to rotate around the scene
+		float3x3 rotMatrix = { cos(_Look_FloatY), 0.0, sin(_Look_FloatY),  
+
+							0.0,				1.0,				0.0,
+
+							-sin(_Look_FloatY), 0.0, cos(_Look_FloatY) };
 
 		// Sampled Value of Warp Texture at UV coordinate T
 		float4 v = tex2D(_WarpTex, i.uv);
 		// ray location (calibration space):
 		float3 v3 = normalize(v.xyz);
 		// use ray location to index into cubemap:
-		float3 rgb = texCUBE(_Cube, v3).rgb * v.a;
+
+		float3 _Look_Vector = float3(_Look_FloatX, _Look_FloatY, _Look_FloatZ);
+		//float3 rgb = texCUBE(_Cube, reflect(v3,_Look_Vector)).rgb * v.a;
+		float3 rgb = texCUBE(_Cube, mul(rotMatrix, v3)).rgb * v.a;
 		return float4(rgb, 1.0);
 		// just invert the colors
 	}

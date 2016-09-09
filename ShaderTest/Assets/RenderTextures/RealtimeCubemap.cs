@@ -15,12 +15,14 @@ public class RealtimeCubemap : MonoBehaviour
     private Material m;
     public Shader shader;
     public int customMask = -1;
+    public int antiAliasing = 2;
 
     public bool allFaces;
     public bool[] customFaces;
 
     public Shader stereoShader;
     public float separation;
+    public float[] lookVector = new float[3];
 
     [ExecuteInEditMode]
     void Start()
@@ -65,8 +67,12 @@ public class RealtimeCubemap : MonoBehaviour
 
     void UpdateCubemap(int faceMask)
     {
-        //Debug.Log("Facemask = " + faceMask);
         Shader.SetGlobalFloat("_EYE_SEPARATION", separation);
+   
+        Shader.SetGlobalFloat("_Look_FloatX", Mathf.Deg2Rad*transform.eulerAngles.x); // used in AlloWarp Shader.
+        Shader.SetGlobalFloat("_Look_FloatY", Mathf.Deg2Rad*transform.eulerAngles.y); // used in AlloWarp Shader
+        Shader.SetGlobalFloat("_Look_FloatZ", Mathf.Deg2Rad*transform.eulerAngles.z); // used in AlloWarp Shader
+
         if (!cam)
         {
             
@@ -90,7 +96,7 @@ public class RealtimeCubemap : MonoBehaviour
         if (!rtex)
         {
             rtex = new RenderTexture(cubemapSize, cubemapSize, 16);
-            rtex.antiAliasing = 2;
+            rtex.antiAliasing = antiAliasing;
             rtex.depth = 0;
             //rtex.anisoLevel = 16;
             rtex.useMipMap = true;
